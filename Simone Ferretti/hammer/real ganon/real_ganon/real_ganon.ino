@@ -188,10 +188,16 @@ byte spi_tx_rx( byte d)
     else ball2=ang;
     if(ball2>0)dir=ball2+plus;
     else dir=ball2-plus;
-    if(dir<0)dir += 360;
+    if(dir<0)dir += 360; //dir è l'angolo dove sta la palla
     
-    vm(255,0);
+    vm(255,dir);
     if(ball_distance==6)vm(0,0);
+    if(dir>=335&&dir<=25)vm(255,0);//se la palla è tra i primi tre va avanti
+    //if(dir>=335&&dir<=25){-------------------- 
+     // if(ball_distance<=2)                     DA PROVARE cioè se la palla è vicina e tra i primi tre va avanti
+       // vm(255,0);
+   // }-----------------------------------------
+    
     //if (dir>45 && dir<112) vm(255,157);
     //else if(dir>135 && dir<225) vm(255,225);
     //else if(dir>248 && dir<315) vm(255,203);
