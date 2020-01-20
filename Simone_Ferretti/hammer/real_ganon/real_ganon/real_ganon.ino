@@ -50,6 +50,7 @@ void setup() {
   bno.begin(bno.OPERATION_MODE_IMUPLUS);
   bno.setExtCrystalUse(true);
   initSPI();
+  
   for(int i = 0 ; i<3 ; i++)
   {
     pinMode(i,OUTPUT);   
@@ -64,7 +65,7 @@ void setup() {
 
 void loop() {
   readimu(); //leggo la bussola
-  ganon(55);
+  ganon(35);
   spi_readfrom644l();//read the distance and position of the ball
     
   }
@@ -184,15 +185,38 @@ byte spi_tx_rx( byte d)
     int ball2;
     int ang=ang_sen[ball_sensor];
     
+    
+    
+    
     if(ang>180) ball2=ang-360;
     else ball2=ang;
-    if(ball2>0)dir=ball2+plus;
+//-----------------------------------------------Prima Fascia davanti
+    if(ball2 > 0 && ball2 < 30) dir = 0;//prima fascia
+    if(ball2 >= 30 && ball2 < 112) dir = ball2 + plus;//seconda fascia
+//----------------------------------------------Seconda Fascia dietro
+    if(ball2 >= 112 && ball2 < 157)dir =  ball2 + plus + 15;//terza fascia
+    
+    if(ball2 >= 157 && ball2 <180)dir = ball2 + plus + 20;//quarta fascia
+//-------------------------------------------------Fascia davanti negativa
+    if(ball2 < 0 && ball2 > -30) dir = 0;
+    if(ball2 <= -30 && ball2 > -112) dir = ball2 - plus;
+//-------------------------------------------------Fascia  dietro negativa
+    if(ball2 <= -112 && ball2 > -157) dir = ball2 - plus -15; 
+    if(ball2 <= -157 && ball2 > -180) dir = ball2 - plus -20;   
+    
+    /*if(ball2>0)dir=ball2+plus;
     else dir=ball2-plus;
+    */
+
+    
     if(dir<0)dir += 360; //dir è l'angolo dove sta la palla
+    
     
     vm(255,dir);
     if(ball_distance==6)vm(0,0);
-    if(dir>=335&&dir<=25)vm(255,0);//se la palla è tra i primi tre va avanti
+ 
+    
+    }//se la palla è tra i primi tre va avanti
     //if(dir>=335&&dir<=25){-------------------- 
      // if(ball_distance<=2)                     DA PROVARE cioè se la palla è vicina e tra i primi tre va avanti
        // vm(255,0);
@@ -202,4 +226,4 @@ byte spi_tx_rx( byte d)
     //else if(dir>135 && dir<225) vm(255,225);
     //else if(dir>248 && dir<315) vm(255,203);
     
-  }
+  
