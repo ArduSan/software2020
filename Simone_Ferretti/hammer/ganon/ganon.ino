@@ -10,9 +10,9 @@
 #define _MOSI  51
 #define _SS    53
 
-#define KP 0.9 // definisco il proporzionale
-#define KI 0  // definisco l'integrale
-#define KD 1.1 // definisco il derivatospi_readfrom644l()
+#define KP 1.6 // definisco il proporzionale
+#define KI 0.1 // definisco l'integrale
+#define KD 0.9 // definisco il derivatospi_readfrom644l()
 
 Adafruit_BNO055 bno=Adafruit_BNO055();
 
@@ -41,6 +41,10 @@ bool ball_seen = false;    // palla in vista si/no era byte
 byte old_s_ball;           // sensore che vedeva la palla in precedenza, paragonato con ball_sensor
 unsigned long time_s_ball; // millisecondipassati dal cambiamento di sensore che vede la palla (KEEPER)
 int dir=0;
+//Variabili relative alla lettura delle linee---------------------------------------
+byte line[6]={A8,A9,A10,A12,A13};
+volatile byte state=0;
+
 
 
 
@@ -55,8 +59,10 @@ void setup() {
   {
     pinMode(i,OUTPUT);   
   }
+  for(int K=0 ; K<6 ; K++){
+    pinMode(line[K],INPUT);
+  }
 }
-  
 
 
   
@@ -65,12 +71,12 @@ void setup() {
 
 void loop() {
   readimu(); //leggo la bussola
-  ganon(35);
+  ganon(55);
   spi_readfrom644l();//read the distance and position of the ball
-    
+  
   }
 
-  void orario(int mot ){  // funzione movimento orario
+void orario(int mot ){  // funzione movimento orario
   digitalWrite(A[mot],HIGH);
   digitalWrite(B[mot],LOW);
 }
@@ -184,46 +190,21 @@ byte spi_tx_rx( byte d)
     int dir=0;
     int ball2;
     int ang=ang_sen[ball_sensor];
-    
-    
-    
-    
-    if(ang>180) ball2=ang-360;
-    else ball2=ang;
-//-----------------------------------------------Prima Fascia davanti
-    if(ball2 > 0 && ball2 < 30) dir = 0;//prima fascia
-    if(ball2 >= 30 && ball2 < 112) dir = ball2 + plus;//seconda fascia
-//----------------------------------------------Seconda Fascia dietro
-    if(ball2 >= 112 && ball2 < 157)dir =  ball2 + plus + 15;//terza fascia
-    
-    if(ball2 >= 157 && ball2 <180)dir = ball2 + plus + 20;//quarta fascia
-//-------------------------------------------------Fascia davanti negativa
-    if(ball2 < 0 && ball2 > -30) dir = 0;
-    if(ball2 <= -30 && ball2 > -112) dir = ball2 - plus;
-//-------------------------------------------------Fascia  dietro negativa
-    if(ball2 <= -112 && ball2 > -157) dir = ball2 - plus -15; 
-    if(ball2 <= -157 && ball2 > -180) dir = ball2 - plus -20;   
-    
-    /*if(ball2>0)dir=ball2+plus;
-    else dir=ball2-plus;
-    */
 
-    
-    if(dir<0)dir += 360; //dir è l'angolo dove sta la palla
-    
-    
+
+    if(ang>340 || ang <20)plus-=20;
+    if(ang>180)ball2 = ang - 360;
+    else ball2 = ang;
+
+    if(ball2>0) dir= ang+plus;
+    else dir=ang-plus;
+
+    if(dir<0)dir= dir+360;
+    else dir= dir;
     vm(255,dir);
     if(ball_distance==6)vm(0,0);
- 
+  }
     
-    }//se la palla è tra i primi tre va avanti
-    //if(dir>=335&&dir<=25){-------------------- 
-     // if(ball_distance<=2)                     DA PROVARE cioè se la palla è vicina e tra i primi tre va avanti
-       // vm(255,0);
-   // }-----------------------------------------
     
-    //if (dir>45 && dir<112) vm(255,157);
-    //else if(dir>135 && dir<225) vm(255,225);
-    //else if(dir>248 && dir<315) vm(255,203);
     
-  
+    
