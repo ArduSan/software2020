@@ -3,7 +3,7 @@
 Adafruit_BNO055 bno = Adafruit_BNO055();
 
 
-#define buz 22
+
 
 
 //PIN SPI------------------------------------
@@ -65,11 +65,13 @@ byte pti;
 long stopT = 0;
 volatile int flagsensor = 0;
 
+//variabili realtive alla canzone
+int speakerPin=22;
 
 void setup() {
   //Serial.begin(9600);
 
-  pinMode(22, OUTPUT);
+  pinMode(speakerPin, OUTPUT);
 
   bno.begin(bno.OPERATION_MODE_IMUPLUS);
   bno.setExtCrystalUse(true);
@@ -109,27 +111,6 @@ void loop() {
   //pArAcAzZo();
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /* void stopsen() {
   if (state == S8 || state == S9 || state == S10 || state == S11 || state == S12 || state == S13) {
