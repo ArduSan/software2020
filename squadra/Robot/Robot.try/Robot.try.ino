@@ -69,7 +69,7 @@ volatile int flagsensor = 0;
 int speakerPin=22;
 
 void setup() {
-  Serial.begin(9600);
+  //Serial.begin(9600);
 
   pinMode(speakerPin, OUTPUT);
 
@@ -95,25 +95,16 @@ void setup() {
 }
 
 
-
-
-
-
 void loop() {
   //Serial.println(state, BIN);
   //delay(500);
-Serial.print(".");
   readimu(); //leggo la bussola
-Serial.print(".");
   //stopsen();
-Serial.print(".");
   sPoStAtIcAzZo();
-Serial.print(".");  
   spi_readfrom644l();//read the distance and position of the ball
-Serial.print(".");
-  MuOvItIcAzZo();
-Serial.print(".");  
+  MuOvItIcAzZo();  
   //pArAcAzZo();
+
 
 }
 

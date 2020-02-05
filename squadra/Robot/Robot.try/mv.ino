@@ -1,4 +1,4 @@
-void orario(int mot ) { // funzione movimento orario
+ void orario(int mot ) { // funzione movimento orario
   digitalWrite(A[mot], HIGH);
   digitalWrite(B[mot], LOW);
 }

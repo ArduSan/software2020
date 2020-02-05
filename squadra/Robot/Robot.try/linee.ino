@@ -57,7 +57,7 @@ void lemuri(){
     break;
 
     case S11:
-    vm(255,310);
+    vm(255,349);
     break;
 
     case S12:
@@ -67,17 +67,22 @@ void lemuri(){
 }
 
 
-void sPoStAtIcAzZo() {
-  if (flagsensor == 1) lemuri();
-  for(int k=0;k<500;k++){
-    if(k<499) lemuri();
-    if(k>=499){
-      ganon(55);
-      k=0;
+/*void sPoStAtIcAzZo() {
+  if (flagsensor == 1) {
+    for(int k=0;k<500;k++){
+      if(k<=499) lemuri();
+      if(k>499){
+        ganon(55);
+        k=0;
+      }
     }
   }
 }
+*/
 
+void cAzZoSpOsTaTi(){
+  
+}
 
 void MuOvItIcAzZo() {
   if (flagsensor == 0) ganon(55);
