@@ -12,10 +12,10 @@ void antiorario(int mot) { // funzione movimento antiorario
 }
 
 // stop
-void hearthattack(int mot) {
+void heartattack(int mot) {
   digitalWrite(A[mot], HIGH);
   digitalWrite(B[mot], HIGH);
-  analogWrite(PWM[mot], 255);
+  analogWrite(PWM[mot], 235);
 }
 void folk(int mot){
     digitalWrite(A[mot], LOW);
@@ -49,9 +49,9 @@ void vm(float V, float d) // funzione movimento
   velocita2 += pidfactor;
   velocita3 += pidfactor;
 
-  velocita1 = constrain(velocita1, -255 , +255); //do alle velocita il comando che non possono superare il 255 e non può andare sotto al -255
-  velocita2 = constrain(velocita2, -255 , +255);
-  velocita3 = constrain(velocita3, -255 , +255);
+  velocita1 = constrain(velocita1, -235 , +235); //do alle velocita il comando che non possono superare il 255 e non può andare sotto al -255
+  velocita2 = constrain(velocita2, -235 , +235);
+  velocita3 = constrain(velocita3, -235 , +235);
 
   if (velocita1 > 0) orario(0);
   else antiorario(0);

@@ -25,7 +25,7 @@ Adafruit_BNO055 bno = Adafruit_BNO055();
 
 
 #define KP 0.9 // definisco il proporzionale
-#define KI 0 // definisco l'integrale
+#define KI 0.1 // definisco l'integrale
 #define KD 1.1 // definisco il derivatospi_readfrom644l()
 
 //array PWM
@@ -49,7 +49,7 @@ float pidfactor = 0;
 int compass;
 int G_dir=0;
 int G_speed=0;
-int Max=255;
+int Max=235;
 
 
 //VARIABILI RELATIVE ALLA LETTURA DELLA PALLA---------------
@@ -62,10 +62,11 @@ unsigned long time_s_ball; // millisecondipassati dal cambiamento di sensore che
 int dir = 0;
 
 
-//VARIABILI RELATIVE ALLA LETTURA DELLE lineE---------------
+//VARIABILI RELATIVE ALLA LETTURA DELLE linee---------------
 byte line[6] = {A8, A9, A10, A12, A13};
 volatile byte state = 0;
-byte stato = 0;
+byte line4 = 0; //byte di SN, SE, SS, SW
+byte memo = 0;
 
 unsigned long stopT = 0;
 unsigned long stopT2 = 0;
@@ -76,12 +77,14 @@ int speakerPin=22;
 
 void setup() {
   Serial.begin(9600);//spi_readfrom644l();//read the distance and position of the ball
-  
+
+  state = 0x3F; // inizializzo la memoria dei sensori di linea (state)
 
   pinMode(speakerPin, OUTPUT);
 
   bno.begin(bno.OPERATION_MODE_IMUPLUS);
-  bno.setExtCrystalUse(true);  initSPI();
+  bno.setExtCrystalUse(true);
+  initSPI();
   for (int i = 0 ; i < 3 ; i++)
   {
     pinMode(i, OUTPUT);
@@ -104,6 +107,6 @@ void loop() {
   //song(); //canzone
   readimu();//lettura bussola
   spi_readfrom644l(); //lettura sensori palla
-  contline();//implemento linee ad attacco/difesa
-  vm(G_speed,G_dir);//assegno il movimento 
+  if(flg==1) contline();//implemento linee ad attacco/difesa
+  else ganon(45); 
 }

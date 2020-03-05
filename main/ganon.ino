@@ -1,4 +1,3 @@
-
 void ganon(int plus) {
   spi_readfrom644l();
   int dir = 0;
@@ -44,4 +43,7 @@ void ganon(int plus) {
       
     }
   }
+  
+  vm(G_speed,G_dir);//assegno il movimento
+  
 }

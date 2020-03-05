@@ -18,4 +18,7 @@ void gengar() {
     }
     else ganon(55); 
   }
+
+  vm(G_speed,G_dir);//assegno il movimento
+  
 }
