@@ -1,5 +1,8 @@
-#include <Adafruit_Sensor.h>
+
+//---------------------------INCLUDO LE LIBRERIE-------- 
 #include <Adafruit_BNO055.h>
+#include <Adafruit_Sensor.h>
+//----------------------------------
 Adafruit_BNO055 bno = Adafruit_BNO055();
 
 
@@ -12,18 +15,21 @@ Adafruit_BNO055 bno = Adafruit_BNO055();
 #define _MISO  50
 #define _MOSI  51
 #define _SS    53
+//------------------------------------
 
 
+//sensori lettura linee pin--------------
 #define S8 31
 #define S9 47
 #define S10 55
 #define S11 59
 #define S12 61
 #define S13 62
+//------------------------------------
 
 
 
-
+// definiscoi il pid, guarda il tab
 #define KP 0.9 // definisco il proporzionale
 #define KI 0.1 // definisco l'integrale
 #define KD 1.1 // definisco il derivatospi_readfrom644l()
@@ -32,24 +38,37 @@ Adafruit_BNO055 bno = Adafruit_BNO055();
 byte A[3] = {2, 10, 12};
 byte B[3] = {3, 11, 13};
 byte PWM [3] = {6, 7, 8};
+//-----------------------pin per i motori
 
-
+//angoli sensori per la palla
 int ang_sen[20] = {0, 15, 30, 45, 60, 75, 90, 112, 135, 157, 180, 203, 225, 248, 270, 285, 300, 315, 330, 345};
+//-----------------
 
-
+//variabili per il movimento : tab mv
 float vy;
 float vx;
 float velocita1 = 0;
 float velocita2 = 0;
 float velocita3 = 0;
+
+
+//---------------------- float per il pid: guardare il tab del pid
 float integral = 0;
 float deltaPRE = 0;
 float pidfactor = 0;
+//------------------
 
+
+//---VARIABILI BUSSOLA----
 int compass;
-int G_dir=0;
-int G_speed=0;
-int Max=235;
+//----------------------
+
+
+
+//assegno delle variabili globali 
+int G_dir=0;  //variabile globale direzione
+int G_speed=0;//variabile globale velocità
+int Max=235;  //variabile che sta a intendere la massima velocità dei motori
 
 
 //VARIABILI RELATIVE ALLA LETTURA DELLA PALLA---------------
@@ -63,36 +82,38 @@ int dir = 0;
 
 
 //VARIABILI RELATIVE ALLA LETTURA DELLE linee---------------
-byte line[6] = {A8, A9, A10, A12, A13};
-volatile byte state = 0;
-byte line4 = 0; //byte di SN, SE, SS, SW
-byte memo = 0;
-
-unsigned long stopT = 0;
-unsigned long stopT2 = 0;
-volatile int flg = 0;
+byte line[6] = {A8, A9, A10, A12, A13};  //pin dei sensori
+volatile byte state = 0;   //variabile di stato
+byte line4 = 0;            //byte di SN, SE, SS, SW
+byte memo = 0;             //variabile che segna la memoria dei sensori
+unsigned long stopT = 0;   //primo conteggio di tempo
+unsigned long stopT2 = 0;  //secondo conteggio di tempo
+volatile int flg = 0;      // flag per la meomeria
+//--------------------------------
 
 //variabili realtive alla canzone
 int speakerPin=22;
 
 void setup() {
-  Serial.begin(9600);//spi_readfrom644l();//read the distance and position of the ball
+  Serial.begin(9600);//monitor seriale inizializzazione 
+  //spi_readfrom644l();//read the distance and position of the ball
 
   state = 0x3F; // inizializzo la memoria dei sensori di linea (state)
 
-  pinMode(speakerPin, OUTPUT);
+  pinMode(speakerPin, OUTPUT);// stabilisco lo speaker come output
 
   bno.begin(bno.OPERATION_MODE_IMUPLUS);
   bno.setExtCrystalUse(true);
-  initSPI();
+  initSPI(); //inizializzo l'SPI guardare il dedicato tab
+  
   for (int i = 0 ; i < 3 ; i++)
   {
-    pinMode(i, OUTPUT);
+    pinMode(i, OUTPUT);  
   }
 
   for (int K = 0 ; K < 6 ; K++)
   {
-    pinMode(line[K], INPUT);
+    pinMode(line[K], INPUT); //for per i sensori di linea
   }
 
   ADMUX = 7; // scollego i pin dopo A7 dall'ADC
@@ -104,9 +125,9 @@ void setup() {
 
 
 void loop() {
-  //song(); //canzone
-  readimu();//lettura bussola
-  spi_readfrom644l(); //lettura sensori palla
+  //song();             //canzone
+  readimu();            //lettura bussola
+  spi_readfrom644l();   //lettura sensori palla
   if(flg==1) contline();//implemento linee ad attacco/difesa
-  else ganon(45); 
+  else ganon(45);       //attaccante
 }
