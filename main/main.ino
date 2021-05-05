@@ -81,8 +81,8 @@ unsigned long time_s_ball; // millisecondipassati dal cambiamento di sensore che
 int dir = 0;
 
 
-//VARIABILI RELATIVE ALLA LETTURA DELLE linee---------------
-byte line[6] = {A8, A9, A10, A12, A13};  //pin dei sensori
+/* //VARIABILI RELATIVE ALLA LETTURA DELLE linee---------------
+byte line[6] = {A8, A9, A10, A11, A12, A13};  //pin dei sensori
 volatile byte state = 0;   //variabile di stato
 byte line4 = 0;            //byte di SN, SE, SS, SW
 byte memo = 0;             //variabile che segna la memoria dei sensori
@@ -90,6 +90,7 @@ unsigned long stopT = 0;   //primo conteggio di tempo
 unsigned long stopT2 = 0;  //secondo conteggio di tempo
 volatile int flg = 0;      // flag per la meomeria
 //--------------------------------
+*/
 
 //variabili realtive alla canzone
 int speakerPin=22;
@@ -97,6 +98,7 @@ int speakerPin=22;
 void setup() {
   Serial.begin(9600);//monitor seriale inizializzazione 
   //spi_readfrom644l();//read the distance and position of the ball
+  Serial2.begin(57600);
 
   state = 0x3F; // inizializzo la memoria dei sensori di linea (state)
 
@@ -127,7 +129,15 @@ void setup() {
 void loop() {
   //song();             //canzone
   readimu();            //lettura bussola
-  spi_readfrom644l();   //lettura sensori palla
-  if(flg==1) contline();//implemento linee ad attacco/difesa
-  else ganon(45);       //attaccante
+  readBall();   //lettura sensori palla
+  //if(flg==1) contline();//implemento linee ad attacco/difesa
+  //else ganon(45);       //attaccante
+
+
+  if (ball_seen)
+    Serial.println(ball_sensor);
+  else
+    Serial.println(" non vedo palla");
+  delay(250);
 }
+//fate i bravi...
